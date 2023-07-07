@@ -1,4 +1,15 @@
-import { Controller, Get, UseGuards, Patch, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Patch,
+  Body,
+  Delete,
+  Param,
+  ParseIntPipe,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { GetUser } from '../Auth/decorator';
 import { JwtGuard } from '../Auth/guard';
@@ -9,13 +20,39 @@ import { UserService } from './user.service';
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
+
   @Get('me')
   getMe(@GetUser() user: User) {
     return user;
   }
 
   @Patch()
-  editUser(@GetUser() user: { id: number }, @Body() dto: EditUserDto) {
-    return this.userService.editUser(user, dto);
+  editUser(@GetUser() userId: { id: number }, @Body() dto: EditUserDto) {
+    return this.userService.editUser(userId, dto);
+  }
+
+  @Get()
+  getUsers() {
+    return this.userService.getUsers();
+  }
+
+  @Get(':id')
+  getUserById(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getUserById(id);
+  }
+
+  @Patch(':id')
+  editUserById(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: EditUserDto,
+  ) {
+    return this.userService.editUserById(id, dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Delete(':id')
+  async deleteUserById(@Param('id', ParseIntPipe) id: number) {
+    await this.userService.deleteUserById(id);
+    return { msg: 'User deleted' };
   }
 }
