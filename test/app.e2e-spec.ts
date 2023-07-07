@@ -112,7 +112,8 @@ describe('App e2e', () => {
           .spec()
           .get('/users/me')
           .withHeaders({ Authorization: 'Bearer $S{userAt}' })
-          .expectStatus(200);
+          .expectStatus(200)
+          .stores('userId', 'id');
       });
     });
 
@@ -128,6 +129,59 @@ describe('App e2e', () => {
           .patch('/users/')
           .withHeaders({ Authorization: 'Bearer $S{userAt}' })
           .withBody(dto)
+          .expectBodyContains(dto.firstName)
+          .expectBodyContains(dto.email);
+      });
+    });
+
+    describe('getUsers', () => {
+      it('Should get all the users', () => {
+        return pactum
+          .spec()
+          .get('/users/')
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+          .expectStatus(200)
+          .expectJsonLength(1);
+      });
+    });
+
+    describe('getUserById', () => {
+      it('Should get the user by id', () => {
+        return pactum
+          .spec()
+          .get('/users/{id}')
+          .withPathParams('id', '$S{userId}')
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+          .expectStatus(200)
+          .expectBodyContains('$S{userId}');
+      });
+    });
+
+    describe('editUserById', () => {
+      const dto: EditUserDto = {
+        firstName: 'SlimFilipin',
+        email: 'testUserById@c10.com',
+      };
+      it('Should edit the user', () => {
+        return pactum
+          .spec()
+          .patch('/users/{id}')
+          .withPathParams('id', '$S{userId}')
+          .withBody(dto)
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+          .expectStatus(200)
+          .expectBodyContains(dto.firstName)
+          .expectBodyContains(dto.email);
+      });
+    });
+
+    describe('deleteUserById', () => {
+      it('Should delete the user', () => {
+        return pactum
+          .spec()
+          .delete('/users/{id}')
+          .withPathParams('id', '$S{userId}')
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
           .expectStatus(200);
       });
     });
