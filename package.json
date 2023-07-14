@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prisma:test:deploy": "dotenv -e .env.test npx prisma migrate deploy --preview-feature",
+    "prisma:studio:test": "dotenv -e .env.test npx prisma studio",
     "db:test:rm": "docker compose rm test-db -s -f -v",
     "db:test:up": "docker compose up test-db -d",
     "db:test:restart": "npm run db:test:rm && npm run db:test:up && (timeout 1 || sleep 1) && npm run prisma:test:deploy",
