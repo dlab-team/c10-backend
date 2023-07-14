@@ -15,13 +15,13 @@ export class UserService {
         ...dto,
       },
     });
-    delete user.hash;
+    delete user.password;
     return user;
   }
 
   async getUsers() {
     const users = await this.prisma.user.findMany();
-    return users.map(({ hash, ...rest }) => rest);
+    return users.map(({ password, ...rest }) => rest);
   }
 
   async getUserById(id: number) {
@@ -31,7 +31,7 @@ export class UserService {
       },
     });
 
-    const { hash, ...userWithoutHash } = user;
+    const { password, ...userWithoutHash } = user;
 
     return userWithoutHash;
   }
@@ -44,7 +44,7 @@ export class UserService {
       data: dto,
     });
 
-    delete user.hash;
+    delete user.password;
     return user;
   }
 

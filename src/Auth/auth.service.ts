@@ -21,7 +21,10 @@ export class AuthService {
       const user = await this.prisma.user.create({
         data: {
           email: dto.email,
-          hash,
+          password: hash,
+          id_user_role: 1,
+          last_name: "juan",
+          first_name: "bodoque"
         },
       });
       return this.signToken(user.id, user.email);
@@ -42,7 +45,7 @@ export class AuthService {
     //if user does not exist throw exception
     if (!user) throw new ForbiddenException('Incorrect Information');
     //compare the psw
-    const pwMatches = await argon.verify(user.hash, dto.password);
+    const pwMatches = await argon.verify(user.password, dto.password);
     //if psw is incorrect throw exception
     if (!pwMatches) throw new ForbiddenException('Incorrect Information');
     //send back the user

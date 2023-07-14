@@ -10,7 +10,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { user } from '@prisma/client';
 import { GetUser } from '../Auth/decorator';
 import { JwtGuard } from '../Auth/guard';
 import { EditUserDto } from './dto';
@@ -22,7 +22,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get('me')
-  getMe(@GetUser() user: User) {
+  getMe(@GetUser() user: user) {
     return user;
   }
 
