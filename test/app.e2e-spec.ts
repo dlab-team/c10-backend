@@ -34,6 +34,8 @@ describe('App e2e', () => {
   const dto: AuthDto = {
     email: 'test@c10be.com',
     password: 'test1234567890',
+    last_name: 'test',
+    first_name: 'test',
   };
   describe('Auth', () => {
     describe('SignUp', () => {
@@ -120,7 +122,7 @@ describe('App e2e', () => {
     describe('EditUser', () => {
       it('Should Edit a User', () => {
         const dto: EditUserDto = {
-          firstName: 'C10',
+          last_name: 'C10',
           email: 'test@update.com',
         };
 
@@ -129,7 +131,7 @@ describe('App e2e', () => {
           .patch('/users/')
           .withHeaders({ Authorization: 'Bearer $S{userAt}' })
           .withBody(dto)
-          .expectBodyContains(dto.firstName)
+          .expectBodyContains(dto.last_name)
           .expectBodyContains(dto.email);
       });
     });
@@ -159,7 +161,7 @@ describe('App e2e', () => {
 
     describe('editUserById', () => {
       const dto: EditUserDto = {
-        firstName: 'SlimFilipin',
+        last_name: 'SlimFilipin',
         email: 'testUserById@c10.com',
       };
       it('Should edit the user', () => {
@@ -170,7 +172,7 @@ describe('App e2e', () => {
           .withBody(dto)
           .withHeaders({ Authorization: 'Bearer $S{userAt}' })
           .expectStatus(200)
-          .expectBodyContains(dto.firstName)
+          .expectBodyContains(dto.last_name)
           .expectBodyContains(dto.email);
       });
     });

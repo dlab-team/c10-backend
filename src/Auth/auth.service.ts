@@ -4,6 +4,7 @@ import { AuthDto } from './dto';
 import { JwtService } from '@nestjs/jwt';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config/dist';
+import { Prisma, user } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -14,17 +15,25 @@ export class AuthService {
   ) {}
 
   async signup(dto: AuthDto) {
-    // Generate the hash psw
     const hash = await argon.hash(dto.password);
-    // Save the new user in the db
+
     try {
-      const user = await this.prisma.user.create({
+      const createdUser = await this.prisma.user.create({
         data: {
           email: dto.email,
-          hash,
+          password: hash,
+          user_role: {
+            connect: {
+              id: 1,
+            },
+          },
+          last_name: dto.last_name,
+          first_name: dto.first_name,
+          user_profile: dto.user_profile,
         },
       });
-      return this.signToken(user.id, user.email);
+
+      return this.signToken(createdUser.id, createdUser.email);
     } catch (error) {
       if (error.code === 'P2002') {
         throw new ForbiddenException('Duplicate Credentials');
@@ -32,6 +41,7 @@ export class AuthService {
       throw error;
     }
   }
+
   async signin(dto: AuthDto) {
     //find the user by email
     const user = await this.prisma.user.findUnique({
@@ -42,7 +52,7 @@ export class AuthService {
     //if user does not exist throw exception
     if (!user) throw new ForbiddenException('Incorrect Information');
     //compare the psw
-    const pwMatches = await argon.verify(user.hash, dto.password);
+    const pwMatches = await argon.verify(user.password, dto.password);
     //if psw is incorrect throw exception
     if (!pwMatches) throw new ForbiddenException('Incorrect Information');
     //send back the user

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,16 +7,238 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model active_visa {
+  id                  Int                   @id(map: "active_visa_pk") @default(autoincrement())
+  country             String                @db.VarChar(18)
+  profile_active_visa profile_active_visa[]
+}
 
-  email String @unique
-  hash String
+model availability {
+  id                      Int                       @id(map: "availability_pk") @default(autoincrement())
+  availability            String                    @db.VarChar(10)
+  profile_to_availability profile_to_availability[]
+}
 
-  firstName String?
-  lastName String?
+model better_current_situation {
+  id                        Int                         @id(map: "better_current_situation_pk") @default(autoincrement())
+  situation                 String                      @db.VarChar
+  profile_current_situation profile_current_situation[]
+}
 
-  @@map("users")
+model companies {
+  id                    Int                     @id(map: "companies_pk") @default(autoincrement())
+  first_name            String                  @db.VarChar(20)
+  last_name             String                  @db.VarChar(20)
+  email                 String                  @db.VarChar(30)
+  phone_number          String                  @db.VarChar(12)
+  company               String                  @db.VarChar(40)
+  questions             String?
+  companies_to_position companies_to_position[]
+}
+
+model companies_to_position {
+  id                 Int             @id(map: "companies_to_position_pk") @default(autoincrement())
+  id_companies       Int
+  id_target_position Int
+  companies          companies       @relation(fields: [id_companies], references: [id], map: "companies_fk")
+  target_position    target_position @relation(fields: [id_target_position], references: [id], map: "target_position_fk")
+}
+
+model current_job_status {
+  id           Int            @id(map: "current_job_status_pk") @default(autoincrement())
+  state        String         @db.VarChar
+  user_profile user_profile[]
+}
+
+model education_received {
+  id               Int          @id(map: "education_received_pk") @default(autoincrement())
+  career           String       @db.VarChar(80)
+  name_institution String       @db.VarChar(60)
+  type_institution String       @db.VarChar(60)
+  id_user_profile  Int
+  user_profile     user_profile @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model frameworks_or_batabase {
+  id                   Int                    @id(map: "frameworks_or_batabase_pk") @default(autoincrement())
+  technology_name      String                 @db.VarChar(28)
+  technology_expertise technology_expertise[]
+  tt_framework_base    tt_framework_base?
+}
+
+model profile_active_visa {
+  id              Int          @id(map: "profile_active_visa_pk") @default(autoincrement())
+  id_active_visa  Int
+  id_user_profile Int
+  active_visa     active_visa  @relation(fields: [id_active_visa], references: [id], map: "active_visa_fk")
+  user_profile    user_profile @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model profile_current_situation {
+  id                          Int                      @id(map: "profile_current_situation_pk") @default(autoincrement())
+  id_better_current_situation Int
+  id_user_profile             Int                      @unique(map: "profile_current_situation_uq")
+  better_current_situation    better_current_situation @relation(fields: [id_better_current_situation], references: [id], map: "better_current_situation_fk")
+  user_profile                user_profile             @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model profile_to_availability {
+  id              Int          @id(map: "profile_to_availability_pk") @default(autoincrement())
+  id_availability Int
+  id_user_profile Int
+  availability    availability @relation(fields: [id_availability], references: [id], map: "availability_fk")
+  user_profile    user_profile @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model profile_to_soft_skill {
+  id              Int          @id(map: "profile_to_soft_skill_pk") @default(autoincrement())
+  id_soft_skills  Int
+  id_user_profile Int
+  soft_skills     soft_skills  @relation(fields: [id_soft_skills], references: [id], map: "soft_skills_fk")
+  user_profile    user_profile @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model profile_to_years_exp {
+  id                  Int              @id(map: "profile_to_years_exp_pk") @default(autoincrement())
+  id_years_experience Int
+  id_user_profile     Int              @unique(map: "profile_to_years_exp_uq")
+  user_profile        user_profile     @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+  years_experience    years_experience @relation(fields: [id_years_experience], references: [id], map: "years_experience_fk")
+}
+
+model programming_language {
+  id                   Int                    @id(map: "programming_language_pk") @default(autoincrement())
+  language             String                 @db.VarChar(28)
+  technology_expertise technology_expertise[]
+  tt_pro_language      tt_pro_language?
+}
+
+model soft_skills {
+  id                    Int                     @id(map: "soft_skills_pk") @default(autoincrement())
+  skill                 String                  @db.VarChar(28)
+  profile_to_soft_skill profile_to_soft_skill[]
+}
+
+model target_position {
+  id                    Int                     @id(map: "target_position_pk") @default(autoincrement())
+  position              String                  @db.VarChar(60)
+  companies_to_position companies_to_position[]
+  user_to_position      user_to_position[]
+}
+
+model technical_test_tools {
+  id              Int          @id(map: "technical_test_tools_pk") @default(autoincrement())
+  approved        Boolean?
+  score           Int?
+  date_completed  DateTime?    @db.Date
+  id_tools        Int          @unique(map: "technical_test_tools_uq")
+  id_user_profile Int
+  tools           tools        @relation(fields: [id_tools], references: [id], map: "tools_fk")
+  user_profile    user_profile @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model technology_expertise {
+  id                        Int                     @id(map: "technology_expertise_pk") @default(autoincrement())
+  level                     Int
+  others                    String?
+  id_programming_language   Int?
+  id_frameworks_or_batabase Int?
+  id_tools                  Int?
+  id_user_profile           Int
+  frameworks_or_batabase    frameworks_or_batabase? @relation(fields: [id_frameworks_or_batabase], references: [id], map: "frameworks_or_batabase_fk")
+  programming_language      programming_language?   @relation(fields: [id_programming_language], references: [id], map: "programming_language_fk")
+  tools                     tools?                  @relation(fields: [id_tools], references: [id], map: "tools_fk")
+  user_profile              user_profile            @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model tools {
+  id                   Int                    @id(map: "tools_pk") @default(autoincrement())
+  tool                 String                 @db.VarChar(28)
+  technical_test_tools technical_test_tools?
+  technology_expertise technology_expertise[]
+}
+
+model tt_framework_base {
+  id                        Int                    @id(map: "tt_framework_base_pk") @default(autoincrement())
+  approved                  Boolean?
+  score                     Int?
+  date_completed            DateTime?              @db.Date
+  id_frameworks_or_batabase Int                    @unique(map: "tt_framework_base_uq")
+  id_user_profile           Int
+  frameworks_or_batabase    frameworks_or_batabase @relation(fields: [id_frameworks_or_batabase], references: [id], map: "frameworks_or_batabase_fk")
+  user_profile              user_profile           @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model tt_pro_language {
+  id                      Int                  @id(map: "technical_test_pro_language_pk") @default(autoincrement())
+  approved                Boolean?
+  score                   Int?
+  date_completed          DateTime?            @db.Date
+  id_programming_language Int                  @unique(map: "tt_pro_language_uq")
+  id_user_profile         Int
+  programming_language    programming_language @relation(fields: [id_programming_language], references: [id], map: "programming_language_fk")
+  user_profile            user_profile         @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model user {
+  id           Int           @id(map: "user_pk") @default(autoincrement())
+  first_name   String?        @db.VarChar
+  last_name    String?        @db.VarChar
+  email        String        @db.VarChar(30) @unique
+  password     String       @db.VarChar
+  id_user_role Int?
+  user_role    user_role?     @relation(fields: [id_user_role], references: [id], map: "user_role_fk")
+  user_profile user_profile?
+}
+
+model user_profile {
+  id                        Int                        @id(map: "user_profile_pk") @default(autoincrement())
+  phone_number              String                     @db.VarChar(12)
+  city                      String                     @db.VarChar(20)
+  country                   String                     @db.VarChar(18)
+  genre                     String                     @db.VarChar(20)
+  highest_edu_level         String                     @db.VarChar(20)
+  current_edu_status        String                     @db.VarChar(20)
+  english_level             String                     @db.VarChar(16)
+  url_cv                    String?                    @db.VarChar
+  url_linkedin              String?                    @db.VarChar
+  url_github                String?                    @db.VarChar
+  url_portfolio             String?                    @db.VarChar
+  preferred_project         String?
+  work_expectation          String?
+  id_current_job_status     Int
+  id_user                   Int                        @unique(map: "user_profile_uq")
+  education_received        education_received[]
+  profile_active_visa       profile_active_visa[]
+  profile_current_situation profile_current_situation?
+  profile_to_availability   profile_to_availability[]
+  profile_to_soft_skill     profile_to_soft_skill[]
+  profile_to_years_exp      profile_to_years_exp?
+  technical_test_tools      technical_test_tools[]
+  technology_expertise      technology_expertise[]
+  tt_framework_base         tt_framework_base[]
+  tt_pro_language           tt_pro_language[]
+  current_job_status        current_job_status         @relation(fields: [id_current_job_status], references: [id], map: "current_job_status_fk")
+  user                      user                       @relation(fields: [id_user], references: [id], map: "user_fk")
+  user_to_position          user_to_position[]
+}
+
+model user_role {
+  id   Int    @id(map: "user_role_pk") @default(autoincrement())
+  role String @db.VarChar
+  user user[]
+}
+
+model user_to_position {
+  id                 Int             @id(map: "user_to_position_pk") @default(autoincrement())
+  id_target_position Int
+  id_user_profile    Int
+  target_position    target_position @relation(fields: [id_target_position], references: [id], map: "target_position_fk")
+  user_profile       user_profile    @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
+}
+
+model years_experience {
+  id                   Int                    @id(map: "years_experience_pk") @default(autoincrement())
+  years                String                 @db.VarChar(40)
+  profile_to_years_exp profile_to_years_exp[]
 }
