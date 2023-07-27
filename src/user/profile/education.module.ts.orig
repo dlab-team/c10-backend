@@ -9,6 +9,11 @@ import { DecodedTokenMiddleware } from 'src/middleware/user.middleware';
 @Module({
   imports: [JwtModule.register({})],
   controllers: [EducationController],
+<<<<<<< HEAD
+  providers: [EducationService]
+})
+export class EducationModule {
+=======
   providers: [EducationService, AuthService]
 })
 export class EducationModule implements NestModule {
@@ -17,5 +22,6 @@ export class EducationModule implements NestModule {
     .apply(DecodedTokenMiddleware)
     .forRoutes('/profile/education/addEducation');
   }
+>>>>>>> Developer
   
 }
