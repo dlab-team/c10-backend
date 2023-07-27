@@ -1,19 +1,15 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EducationDto } from './dto';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config/dist';
 import { Request } from 'express';
 
 @Injectable()
 export class EducationService {
-    constructor(private prisma: PrismaService, private jwt: JwtService, private config: ConfigService){}
+    constructor(private prisma: PrismaService){}
 
     async addEducation(req: Request, data: EducationDto){
-        const token = req.headers.authorization.split(' ')[1];
-        
-        const user = await this.getUserByToken(token);
-        
+        const user = req.user as {sub: number, email: string, };
+
         try{
             const max_education = await this.prisma.education_received.count({
                 where: {
@@ -23,14 +19,12 @@ export class EducationService {
                 }
             });
 
-            console.log(user);
-
             if(max_education > 2){
-                throw 1;
+                throw new Error('Max education reached');
             }else{
-                const education_extra = await this.prisma.user_profile.update({
+                const profile = await this.prisma.user_profile.update({
                     where: {
-                        id: user.sub
+                        id_user: user.sub
                     },
                     data: {
                         highest_edu_level: data.highest_edu_level,
@@ -38,36 +32,22 @@ export class EducationService {
                         current_edu_status: data.current_edu_status
                     }
                 });
-                const education = await this.prisma.education_received.createMany({
+                await this.prisma.education_received.createMany({
                     data: [
                         {career: data.career_1,
                         name_institution: data.name_institution_1,
                         type_institution: data.type_institution_1,
-                        id_user_profile: user.sub},
+                        id_user_profile: profile.id},
                         {career: data.career_2,
                         name_institution: data.name_institution_2,
                         type_institution: data.type_institution_2,
-                        id_user_profile: user.sub}
+                        id_user_profile: profile.id}
                     ]
                 });
-                return {
-                    education_extra,
-                    education
-                }
             }
+            return {message: 'Education added successfully'};
         }catch(error){
             console.log(error);
-            if(error ===1){
-                throw new ForbiddenException('Max education reached')
-            }
         }
-    }
-
-    async getUserByToken(token: string){
-        const secret = this.config.get('JWT_SECRET');
-        const decoded = this.jwt.verifyAsync(token, { secret });
-
-        const user = decoded;
-        return user;
     }
 }
