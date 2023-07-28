@@ -188,4 +188,72 @@ describe('App e2e', () => {
       });
     });
   });
+
+  describe('education', () => {
+    const dtoeducation = {
+      highest_edu_level: "Institute",
+      career_1: "Arquitecto",
+      name_institution_1: "DuocUC",
+      type_institution_1: "I.P",
+      career_2: "Reponedor",
+      name_institution_2: "La calle",
+      type_institution_2: "escuela",
+      current_edu_status: "looking for work",
+      english_level: "Basic A1"
+    };
+
+    let edu_user: AuthDto = {
+      email: 'probemos@test.com',
+      password: 'test1234567890',
+      last_name: 'probemos',
+      first_name: 'ednpoint',
+    };
+
+    let token: string;
+
+    it('Should Sign Up', () => {
+      return pactum
+        .spec()
+        .post('/auth/signup')
+        .withBody(edu_user)
+        .expectStatus(201);
+    });
+
+    it('Should sign in', () => {
+      return pactum
+        .spec()
+        .post('/auth/signin')
+        .withBody({
+          email: edu_user.email,
+          password: edu_user.password
+        })
+        .expectStatus(201)
+        .expectJson((res) => {
+          token = res.body.access_token;
+          console.log(token);
+        });
+    });
+    
+    it('Should throw if User Profile is not created', () => {
+      return pactum
+        .spec()
+        .withBearerToken(token)
+        .post('/profile/education/addEducation')
+        .withBody(dtoeducation)
+        .expectStatus(404);
+    });
+
+    // it('Should create User Profile', () => {
+
+    // });
+
+    it('Should create Education', () => {
+      return pactum
+        .spec()
+        .withBearerToken(token)
+        .post('/profile/education/addEducation')
+        .withBody(dtoeducation)
+        .expectStatus(201)
+    });
+  })
 });
