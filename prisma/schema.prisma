@@ -20,9 +20,9 @@ model availability {
 }
 
 model better_current_situation {
-  id                        Int                         @id(map: "better_current_situation_pk") @default(autoincrement())
-  situation                 String                      @db.VarChar
-  profile_current_situation profile_current_situation[]
+  id           Int            @id(map: "better_current_situation_pk") @default(autoincrement())
+  situation    String         @db.VarChar
+  user_profile user_profile[]
 }
 
 model companies {
@@ -74,14 +74,6 @@ model profile_active_visa {
   user_profile    user_profile @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
 }
 
-model profile_current_situation {
-  id                          Int                      @id(map: "profile_current_situation_pk") @default(autoincrement())
-  id_better_current_situation Int
-  id_user_profile             Int                      @unique(map: "profile_current_situation_uq")
-  better_current_situation    better_current_situation @relation(fields: [id_better_current_situation], references: [id], map: "better_current_situation_fk")
-  user_profile                user_profile             @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
-}
-
 model profile_to_availability {
   id              Int          @id(map: "profile_to_availability_pk") @default(autoincrement())
   id_availability Int
@@ -96,14 +88,6 @@ model profile_to_soft_skill {
   id_user_profile Int
   soft_skills     soft_skills  @relation(fields: [id_soft_skills], references: [id], map: "soft_skills_fk")
   user_profile    user_profile @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
-}
-
-model profile_to_years_exp {
-  id                  Int              @id(map: "profile_to_years_exp_pk") @default(autoincrement())
-  id_years_experience Int
-  id_user_profile     Int              @unique(map: "profile_to_years_exp_uq")
-  user_profile        user_profile     @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
-  years_experience    years_experience @relation(fields: [id_years_experience], references: [id], map: "years_experience_fk")
 }
 
 model programming_language {
@@ -184,43 +168,45 @@ model user {
   id           Int           @id(map: "user_pk") @default(autoincrement())
   first_name   String?        @db.VarChar
   last_name    String?        @db.VarChar
-  email        String        @db.VarChar(30) @unique
-  password     String       @db.VarChar
+  email        String        @unique @db.VarChar(30)
+  password     String?       @db.VarChar
   id_user_role Int?
   user_role    user_role?     @relation(fields: [id_user_role], references: [id], map: "user_role_fk")
   user_profile user_profile?
 }
 
 model user_profile {
-  id                        Int                        @id(map: "user_profile_pk") @default(autoincrement())
-  phone_number              String                     @db.VarChar(12)
-  city                      String                     @db.VarChar(20)
-  country                   String                     @db.VarChar(18)
-  genre                     String                     @db.VarChar(20)
-  highest_edu_level         String                     @db.VarChar(20)
-  current_edu_status        String                     @db.VarChar(20)
-  english_level             String                     @db.VarChar(16)
-  url_cv                    String?                    @db.VarChar
-  url_linkedin              String?                    @db.VarChar
-  url_github                String?                    @db.VarChar
-  url_portfolio             String?                    @db.VarChar
-  preferred_project         String?
-  work_expectation          String?
-  id_current_job_status     Int
-  id_user                   Int                        @unique(map: "user_profile_uq")
-  education_received        education_received[]
-  profile_active_visa       profile_active_visa[]
-  profile_current_situation profile_current_situation?
-  profile_to_availability   profile_to_availability[]
-  profile_to_soft_skill     profile_to_soft_skill[]
-  profile_to_years_exp      profile_to_years_exp?
-  technical_test_tools      technical_test_tools[]
-  technology_expertise      technology_expertise[]
-  tt_framework_base         tt_framework_base[]
-  tt_pro_language           tt_pro_language[]
-  current_job_status        current_job_status         @relation(fields: [id_current_job_status], references: [id], map: "current_job_status_fk")
-  user                      user                       @relation(fields: [id_user], references: [id], map: "user_fk")
-  user_to_position          user_to_position[]
+  id                          Int                       @id(map: "user_profile_pk") @default(autoincrement())
+  phone_number                String                    @db.VarChar(12)
+  city                        String                    @db.VarChar(20)
+  country                     String                    @db.VarChar(18)
+  genre                       String                    @db.VarChar(20)
+  highest_edu_level           String?                   @db.VarChar(20)
+  current_edu_status          String?                   @db.VarChar(20)
+  english_level               String?                   @db.VarChar(16)
+  url_cv                      String?                   @db.VarChar
+  url_linkedin                String?                   @db.VarChar
+  url_github                  String?                   @db.VarChar
+  url_portfolio               String?                   @db.VarChar
+  preferred_project           String?
+  work_expectation            String?
+  id_current_job_status       Int
+  id_user                     Int                       @unique(map: "user_profile_uq")
+  id_years_experience         Int?
+  id_better_current_situation Int?
+  education_received          education_received[]
+  profile_active_visa         profile_active_visa[]
+  profile_to_availability     profile_to_availability[]
+  profile_to_soft_skill       profile_to_soft_skill[]
+  technical_test_tools        technical_test_tools[]
+  technology_expertise        technology_expertise[]
+  tt_framework_base           tt_framework_base[]
+  tt_pro_language             tt_pro_language[]
+  better_current_situation    better_current_situation? @relation(fields: [id_better_current_situation], references: [id], map: "better_current_situation_fk")
+  current_job_status          current_job_status       @relation(fields: [id_current_job_status], references: [id], map: "current_job_status_fk")
+  user                        user                      @relation(fields: [id_user], references: [id], map: "user_fk")
+  years_experience            years_experience?         @relation(fields: [id_years_experience], references: [id], map: "years_experience_fk")
+  user_to_position            user_to_position[]
 }
 
 model user_role {
@@ -238,7 +224,7 @@ model user_to_position {
 }
 
 model years_experience {
-  id                   Int                    @id(map: "years_experience_pk") @default(autoincrement())
-  years                String                 @db.VarChar(40)
-  profile_to_years_exp profile_to_years_exp[]
+  id           Int            @id(map: "years_experience_pk") @default(autoincrement())
+  years        String         @db.VarChar(40)
+  user_profile user_profile[]
 }
