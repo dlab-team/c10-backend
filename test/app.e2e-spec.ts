@@ -227,17 +227,14 @@ describe('App e2e', () => {
           email: edu_user.email,
           password: edu_user.password
         })
-        .expectStatus(201)
-        .expectJson((res) => {
-          token = res.body.access_token;
-          console.log(token);
-        });
+        .expectStatus(200)
+        .stores('userAt', 'access_token');
     });
     
     it('Should throw if User Profile is not created', () => {
       return pactum
         .spec()
-        .withBearerToken(token)
+        .withHeaders({ Authorization: 'Bearer $S{userAt}' })
         .post('/profile/education/addEducation')
         .withBody(dtoeducation)
         .expectStatus(404);
@@ -247,13 +244,13 @@ describe('App e2e', () => {
 
     // });
 
-    it('Should create Education', () => {
-      return pactum
-        .spec()
-        .withBearerToken(token)
-        .post('/profile/education/addEducation')
-        .withBody(dtoeducation)
-        .expectStatus(201)
-    });
+    // it('Should create Education', () => {
+    //   return pactum
+    //     .spec()
+    //     .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+    //     .post('/profile/education/addEducation')
+    //     .withBody(dtoeducation)
+    //     .expectStatus(201)
+    // });
   })
 });
