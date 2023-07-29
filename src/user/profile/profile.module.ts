@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
   controllers: [EducationController],
   providers: [EducationService, JwtService]
 })
-export class EducationModule implements NestModule {
+export class ProfileModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
     .apply(DecodedTokenMiddleware)
