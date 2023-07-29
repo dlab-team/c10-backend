@@ -53,6 +53,7 @@ export class EducationService {
                 console.log(`user with id ${user.id} error : ${error.meta.cause}`);
                 throw new NotFoundException('User not found');
             }
+            throw new Error(error);
         }
     }
 }
