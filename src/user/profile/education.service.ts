@@ -1,73 +1,59 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 import { EducationDto } from './dto';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config/dist';
 import { Request } from 'express';
 
 @Injectable()
 export class EducationService {
-    constructor(private prisma: PrismaService, private jwt: JwtService, private config: ConfigService){}
+    constructor(private prisma: PrismaService) { }
 
-    async addEducation(req: Request, data: EducationDto){
-        const token = req.headers.authorization.split(' ')[1];
-        
-        const user = await this.getUserByToken(token);
-        
-        try{
-            const max_education = await this.prisma.education_received.count({
+    async addEducation(req: Request, data: EducationDto) {
+        const user = req.user as {
+            id: number,
+            first_name: string,
+            last_name: string,
+            email: string,
+            id_user_role: number
+        };
+
+        try {
+            const profile = await this.prisma.user_profile.update({
                 where: {
-                    user_profile: {
-                        id_user: user.sub
-                    }
+                    id_user: user.id
+                },
+                data: {
+                    highest_edu_level: data.highest_edu_level,
+                    english_level: data.english_level,
+                    current_edu_status: data.current_edu_status
                 }
             });
 
-            console.log(user);
-
-            if(max_education > 2){
-                throw 1;
-            }else{
-                const education_extra = await this.prisma.user_profile.update({
-                    where: {
-                        id: user.sub
-                    },
-                    data: {
-                        highest_edu_level: data.highest_edu_level,
-                        english_level: data.english_level,
-                        current_edu_status: data.current_edu_status
-                    }
-                });
-                const education = await this.prisma.education_received.createMany({
-                    data: [
-                        {career: data.career_1,
+            await this.prisma.education_received.createMany({
+                data: [
+                    {
+                        career: data.career_1,
                         name_institution: data.name_institution_1,
                         type_institution: data.type_institution_1,
-                        id_user_profile: user.sub},
-                        {career: data.career_2,
+                        id_user_profile: profile.id
+                    },
+                    {
+                        career: data.career_2,
                         name_institution: data.name_institution_2,
                         type_institution: data.type_institution_2,
-                        id_user_profile: user.sub}
-                    ]
-                });
-                return {
-                    education_extra,
-                    education
-                }
+                        id_user_profile: profile.id
+                    }
+                ]
+            });
+            return {
+                statusCode: HttpStatus.CREATED,
+                message: 'Education added successfully'
+            };
+        } catch (error) {
+            if (error.code === 'P2025') {
+                console.log(`user with id ${user.id} error : ${error.meta.cause}`);
+                throw new NotFoundException('User not found');
             }
-        }catch(error){
-            console.log(error);
-            if(error ===1){
-                throw new ForbiddenException('Max education reached')
-            }
+            throw new Error(error);
         }
-    }
-
-    async getUserByToken(token: string){
-        const secret = this.config.get('JWT_SECRET');
-        const decoded = this.jwt.verifyAsync(token, { secret });
-
-        const user = decoded;
-        return user;
     }
 }
