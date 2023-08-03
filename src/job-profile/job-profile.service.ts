@@ -31,6 +31,12 @@ export class JobProfileService {
             id_tools: dto.idTools,
             id_user_profile: dto.idUserProfile,
           },
+          include: {
+            programming_language: true,
+            frameworks_or_batabase: true,
+            tools: true,
+            user_profile: true
+          },
         },
       );
       return technologyExpertise;
