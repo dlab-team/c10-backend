@@ -200,3 +200,7 @@ INSERT INTO c10.better_current_situation (id, situation) VALUES (DEFAULT, E'Quie
 INSERT INTO c10.better_current_situation (id, situation) VALUES (DEFAULT, E'Estoy disponible para migrar de mi ciudad dentro de mi país');
 -- ddl-end --
 INSERT INTO c10.better_current_situation (id, situation) VALUES (DEFAULT, E'Estoy disponible para migrar a otro país');
+
+INSERT INTO c10.user_role (id, role) VALUES (default, 'Administrador');
+INSERT INTO c10.user_role (id, role) VALUES (default, 'Talento');
+INSERT INTO c10.user_role (id, role) VALUES (default, 'Staff');
