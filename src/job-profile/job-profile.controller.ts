@@ -2,13 +2,21 @@ import { Controller, Get, Post,Body } from '@nestjs/common';
 import { JobProfileService } from './job-profile.service';
 import { JobProfileDto } from './dto';
 
-@Controller('jobprofile')
+@Controller('job')
 export class JobProfileController {
   constructor(private jobProfileService: JobProfileService) {}
 
-  @Get()
-  getJobProfile() {
-    return this.jobProfileService.getJobProfile();
+  @Get('frameworks')
+  getFrameworksProfile() {
+    return this.jobProfileService.getFrameworksProfile();
+  }
+  @Get('lenguajes')
+  getLenaguajesProfile() {
+    return this.jobProfileService.getLenaguajesProfile();
+  }
+  @Get('tools')
+  getToolsProfile() {
+    return this.jobProfileService.getToolsProfile();
   }
 
   @Post('profile')
