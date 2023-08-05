@@ -1,19 +1,19 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsArray } from 'class-validator';
 
 export class JobSoughtDto {
     @IsString()
     @IsOptional()
     work_expectation: string;
 
-    @IsNumber()
+    @IsArray()
     @IsOptional()
-    id_availability: number;
+    id_availability: Array<number>;
 
     @IsNumber()
     @IsOptional()
     id_better_current_situation: number;
 
-    @IsNumber()
+    @IsArray()
     @IsOptional()
-    id_active_visa: number
+    id_active_visa: Array<number>;
 }
