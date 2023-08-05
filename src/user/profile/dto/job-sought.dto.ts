@@ -11,9 +11,9 @@ export class JobSoughtDto {
 
     @IsNumber()
     @IsOptional()
-    better_current_situation: number;
+    id_better_current_situation: number;
 
     @IsNumber()
     @IsOptional()
-    active_visa: number
+    id_active_visa: number
 }

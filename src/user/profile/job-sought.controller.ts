@@ -8,7 +8,7 @@ export class JobSoughtController {
     constructor(private jobService: JobSoughtService){}
 
     @Post('addJobSought')
-    name(@Req() req, @Body() data) {
-        
+    addJobSought(@Req() req, @Body() data) {
+        return this.jobService.addJobSought(req, data);
     }
 }
