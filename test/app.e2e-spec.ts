@@ -5,6 +5,7 @@ import * as pactum from 'pactum';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { AuthDto } from 'src/Auth/dto';
 import { EditUserDto } from 'src/user/dto';
+import { JobSoughtDto } from 'src/user/profile/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -230,7 +231,7 @@ describe('App e2e', () => {
         .expectStatus(200)
         .stores('userAt', 'access_token');
     });
-    
+
     it('Should throw if User Profile is not created', () => {
       return pactum
         .spec()
@@ -253,4 +254,88 @@ describe('App e2e', () => {
     //     .expectStatus(201)
     // });
   })
+
+  describe('jobsought', () => {
+    const userJobDto: AuthDto = {
+      email: 'jobtest@test.com',
+      password: 'test123',
+      first_name: 'job',
+      last_name: 'test',
+      id_user_role: 1,
+    }
+
+    const dtoJobSought: JobSoughtDto = {
+      work_expectation: "",
+      id_availability: [1],
+      id_better_current_situation: 1,
+      id_active_visa: [2, 1],
+    }
+
+    describe('SignUp to get a token ', () => {
+      it('Should Sign Up', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody(userJobDto)
+          .expectStatus(200)
+          .stores('userAt', 'access_token');
+      });
+    });
+
+    describe('Create a job sought', () => {
+      it('Should create a job sought', () => {
+        return pactum
+          .spec()
+          .post('/profile/jobSought/addJobSought')
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+          .withBody(dtoJobSought)
+          .expectStatus(201)
+      });
+
+      it('Should create without work expectation', () => {
+        return pactum
+          .spec()
+          .post('/profile/jobSought/addJobSought')
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+          .withBody({
+            id_active_visa: [1],
+            id_availability: [1],
+            id_better_current_situation: 1,
+          } as JobSoughtDto)
+          .expectStatus(201)
+      });
+
+      it('Should create without id active visa', () => {
+        return pactum
+          .spec()
+          .post('/profile/jobSought/addJobSought')
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+          .withBody({
+            id_availability: [1],
+            id_better_current_situation: 1,
+          } as JobSoughtDto)
+          .expectStatus(201)
+      });
+
+      it('Should create without id availability', () => {
+        return pactum
+          .spec()
+          .post('/profile/jobSought/addJobSought')
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+          .withBody({
+            id_better_current_situation: 1,
+          } as JobSoughtDto)
+          .expectStatus(201)
+      });
+
+      it('Should pass empy', () => {
+        return pactum
+          .spec()
+          .post('/profile/jobSought/addJobSought')
+          .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+          .withBody({})
+          .expectStatus(200)
+      });
+    });
+  });
 });
