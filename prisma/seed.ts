@@ -156,7 +156,7 @@ async function main() {
         data: [
             {country: 'Estados Unidos'},
             {country: 'Union Europea'},
-            {country: 'Mi pais de residencia actual'},
+            {country: 'Mi pais de origen'},
             {country: 'Otros paises'}
         ]
     });
