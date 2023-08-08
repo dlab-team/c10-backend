@@ -151,6 +151,23 @@ async function main() {
             { role: 'Staff' }
         ]
     });
+
+    await prisma.active_visa.createMany({
+        data: [
+            {country: 'Estados Unidos'},
+            {country: 'Union Europea'},
+            {country: 'Mi pais de origen'},
+            {country: 'Otros paises'}
+        ]
+    });
+
+    await prisma.availability.createMany({
+        data: [
+            {availability: 'Full Time'},
+            {availability: 'Part Time'},
+            {availability: 'Freelance'}
+        ]
+    });
 }
 
 main()
