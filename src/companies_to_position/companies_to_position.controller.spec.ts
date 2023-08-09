@@ -11,7 +11,9 @@ describe('CompaniesToPositionController', () => {
       providers: [CompaniesToPositionService],
     }).compile();
 
-    controller = module.get<CompaniesToPositionController>(CompaniesToPositionController);
+    controller = module.get<CompaniesToPositionController>(
+      CompaniesToPositionController,
+    );
   });
 
   it('should be defined', () => {
