@@ -2,19 +2,14 @@ import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { EducationDto } from './dto';
 import { Request } from 'express';
+import { DecodedTokenDto } from '../dto';
 
 @Injectable()
 export class EducationService {
     constructor(private prisma: PrismaService) { }
 
     async addEducation(req: Request, data: EducationDto) {
-        const user = req.user as {
-            id: number,
-            first_name: string,
-            last_name: string,
-            email: string,
-            id_user_role: number
-        };
+        const user = req.user as DecodedTokenDto;
 
         try {
             const profile = await this.prisma.user_profile.update({
