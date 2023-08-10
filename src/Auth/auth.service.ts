@@ -48,6 +48,7 @@ export class AuthService {
       where: {
         email: dto.email,
       },
+      
     });
     //if user does not exist throw exception
     if (!user) throw new ForbiddenException('Incorrect Information');
@@ -57,6 +58,8 @@ export class AuthService {
     if (!pwMatches) throw new ForbiddenException('Incorrect Information');
     //send back the user
     return this.signToken(user.id, user.email);
+
+    
   }
 
   async signToken(

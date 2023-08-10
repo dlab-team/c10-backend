@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { CompaniesModule } from './companies/companies.module';
 import { CompaniesToPositionModule } from './companies_to_position/companies_to_position.module';
+import { JobProfileModule } from './job-profile/job-profile.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CompaniesToPositionModule } from './companies_to_position/companies_to_
     PrismaModule,
     CompaniesModule,
     CompaniesToPositionModule,
+    JobProfileModule,
   ],
 })
 export class AppModule {}
