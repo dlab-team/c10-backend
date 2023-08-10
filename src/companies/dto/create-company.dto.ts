@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEmail, IsPhoneNumber } from 'class-validator';
+import { IsNotEmpty, IsEmail, Length } from 'class-validator';
 
 export class CreateCompanyDto {
   @IsNotEmpty()
@@ -10,11 +10,12 @@ export class CreateCompanyDto {
   @IsEmail()
   email: string;
 
-  @IsPhoneNumber()
+  @IsNotEmpty()
+  @Length(9, 9, { message: 'Phone number must be a 9-digit number' })
   phone_number: string;
 
   @IsNotEmpty()
   company_name: string;
 
-  questions: string;
+  questions: string | null;
 }
