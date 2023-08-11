@@ -17,4 +17,5 @@ export class JobSoughtController {
     GetJobSoughtUIData() {
         return this.jobService.GetJobSoughtUIData();
     }
+
 }

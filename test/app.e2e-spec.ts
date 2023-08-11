@@ -276,8 +276,14 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody(userJobDto)
-          .expectStatus(200)
+          .withBody({
+            email: userJobDto.email,
+            password: userJobDto.password,
+            first_name: userJobDto.first_name,
+            last_name: userJobDto.last_name,
+            id_user_role: userJobDto.id_user_role,
+          })
+          .expectStatus(201)
           .stores('userAt', 'access_token');
       });
     });
@@ -289,7 +295,7 @@ describe('App e2e', () => {
           .post('/profile/jobSought/addJobSought')
           .withHeaders({ Authorization: 'Bearer $S{userAt}' })
           .withBody(dtoJobSought)
-          .expectStatus(201)
+          .expectStatus(201);
       });
 
       it('Should create without work expectation', () => {
@@ -302,7 +308,7 @@ describe('App e2e', () => {
             id_availability: [1],
             id_better_current_situation: 1,
           } as JobSoughtDto)
-          .expectStatus(201)
+          .expectStatus(201);
       });
 
       it('Should create without id active visa', () => {
@@ -314,7 +320,7 @@ describe('App e2e', () => {
             id_availability: [1],
             id_better_current_situation: 1,
           } as JobSoughtDto)
-          .expectStatus(201)
+          .expectStatus(201);
       });
 
       it('Should create without id availability', () => {
@@ -325,7 +331,7 @@ describe('App e2e', () => {
           .withBody({
             id_better_current_situation: 1,
           } as JobSoughtDto)
-          .expectStatus(201)
+          .expectStatus(201);
       });
 
       it('Should pass empy', () => {
@@ -334,7 +340,7 @@ describe('App e2e', () => {
           .post('/profile/jobSought/addJobSought')
           .withHeaders({ Authorization: 'Bearer $S{userAt}' })
           .withBody({})
-          .expectStatus(200)
+          .expectStatus(200);
       });
     });
   });
