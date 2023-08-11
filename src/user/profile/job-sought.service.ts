@@ -63,9 +63,25 @@ export class JobSoughtService {
                 throw new NotFoundException('User Profile not found');
             } else if (error.code === 'P2003') {
                 console.log(`Error : ${error.code} : Foreign key constraint failed :  ${error.meta.field_name}}`)
-                throw new NotFoundException(`Value not found : Internal Error`);
+                throw new NotFoundException(`Value not found : Database Error`);
             }
             throw new Error(error);
+        }
+    }
+
+    async GetJobSoughtUIData() {
+        try{
+            const availability_data = await this.prisma.availability.findMany();
+            const active_visa_data = await this.prisma.active_visa.findMany();
+            const better_current_situation_data = await this.prisma.better_current_situation.findMany();
+
+            return {
+                availability_data : availability_data,
+                active_visa_data : active_visa_data,
+                better_current_situation_data : better_current_situation_data
+            }
+        }catch(error){
+            throw new Error(error.message);
         }
     }
 }
