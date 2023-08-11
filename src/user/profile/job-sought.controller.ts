@@ -12,4 +12,10 @@ export class JobSoughtController {
     addJobSought(@Req() req, @Body() data: JobSoughtDto) {
         return this.jobService.addJobSought(req, data);
     }
+
+    @Get('GetJobSoughtUIData')
+    GetJobSoughtUIData() {
+        return this.jobService.GetJobSoughtUIData();
+    }
+
 }
