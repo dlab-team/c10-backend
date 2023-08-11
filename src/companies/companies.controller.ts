@@ -1,4 +1,4 @@
-import {  Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -15,7 +15,8 @@ export class CompaniesController {
       email: createCompanyDto.email,
       phone_number: createCompanyDto.phone_number,
       company: createCompanyDto.company_name,
-      questions: createCompanyDto.questions,
+      // Only include questions property if it's not null
+      ...(createCompanyDto.questions !== null && { questions: createCompanyDto.questions }),
     };
 
     return this.prisma.companies.create({
