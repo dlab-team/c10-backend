@@ -1,4 +1,7 @@
+import { IsNotEmpty, Length } from 'class-validator';
 export class CreateUserProfileDto {
+  @IsNotEmpty()
+  @Length(9, 9, { message: 'Phone number must be a 9-digit number' })
   phone_number: string;
   city: string;
   country: string;
