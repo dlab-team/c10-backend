@@ -7,12 +7,12 @@ import { JwtService } from '@nestjs/jwt';
 @Module({
   imports: [],
   controllers: [EducationController],
-  providers: [EducationService, JwtService]
+  providers: [EducationService, JwtService],
 })
 export class ProfileModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-    .apply(DecodedTokenMiddleware)
-    .forRoutes('/profile/education/addEducation');
-  };
+      .apply(DecodedTokenMiddleware)
+      .forRoutes('/profile/education/addEducation');
+  }
 }

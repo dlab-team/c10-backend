@@ -2,12 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserProfileDto } from './dto/create-user_profile.dto';
 import { UpdateUserProfileDto } from './dto/update-user_profile.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class UserProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createUserProfileDto: CreateUserProfileDto) {
+  async create(req: Request, createUserProfileDto: CreateUserProfileDto) {
+    const user = req.user as {
+      id: number;
+      first_name: string;
+      last_name: string;
+      email: string;
+      id_user_role: number;
+    };
+
+    console.log(user);
+
     const userProfileInput = {
       phone_number: createUserProfileDto.phone_number,
       city: createUserProfileDto.city,
@@ -23,13 +34,15 @@ export class UserProfileService {
       preferred_project: createUserProfileDto.preferred_project,
       work_expectation: createUserProfileDto.work_expectation,
       id_current_job_status: createUserProfileDto.id_current_job_status,
-      id_user: createUserProfileDto.id_user,
+      id_user: user.id,
       id_years_experience: createUserProfileDto.id_years_experience,
       id_better_current_situation:
         createUserProfileDto.id_better_current_situation,
     };
 
-    return this.prisma.user_profile.create({
+    console.log(userProfileInput);
+
+    await this.prisma.user_profile.create({
       data: userProfileInput,
     });
   }
