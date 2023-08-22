@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, IsArray } from 'class-validator';
 
 export class JobProfileDto {
   @IsNumber()
@@ -17,8 +17,8 @@ export class JobProfileDto {
   @IsNumber()
   idFrameworksOrDatabase: number;
 
-  @IsNotEmpty()
   @IsNumber()
+  @IsNotEmpty()
   idTools: number;
   
   @IsNotEmpty()

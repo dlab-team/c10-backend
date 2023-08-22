@@ -131,7 +131,7 @@ model technology_expertise {
   id_user_profile           Int
   frameworks_or_batabase    frameworks_or_batabase? @relation(fields: [id_frameworks_or_batabase], references: [id], map: "frameworks_or_batabase_fk")
   programming_language      programming_language?   @relation(fields: [id_programming_language], references: [id], map: "programming_language_fk")
-  tools                     tools?                  @relation(fields: [id_tools], references: [id], map: "tools_fk")
+  tools                     tools?                 @relation(fields: [id_tools], references: [id], map: "tools_fk")
   user_profile              user_profile            @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
 }
 
