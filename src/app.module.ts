@@ -3,6 +3,9 @@ import { AuthModule } from './Auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserProfileModule } from './user_profile/user_profile.module';
+import { CompaniesModule } from './companies/companies.module';
+import { CompaniesToPositionModule } from './companies_to_position/companies_to_position.module';
 import { JobProfileModule } from './job-profile/job-profile.module';
 
 @Module({
@@ -13,6 +16,9 @@ import { JobProfileModule } from './job-profile/job-profile.module';
     AuthModule,
     UserModule,
     PrismaModule,
+    UserProfileModule,
+    CompaniesModule,
+    CompaniesToPositionModule,
     JobProfileModule,
   ],
 })

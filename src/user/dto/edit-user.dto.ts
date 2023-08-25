@@ -13,6 +13,7 @@ export class EditUserDto {
   @IsOptional()
   last_name?: string;
 }
+
 export class DecodedTokenDto {
   id: number;
   first_name: string;
