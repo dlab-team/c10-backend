@@ -15,15 +15,19 @@ export class JobProfileDto {
   @IsString()
   others: string;
 
+  @IsArray()
+  @IsOptional()
+  idProgrammingLanguage:  Array<number>;
+
+  @IsArray()
+  @IsOptional()
+  idFrameworksOrDatabase:  Array<number>;
+
+  @IsArray()
+  @IsOptional()
+  idTools:  Array<number>;
+
   @IsNumber()
   @IsNotEmpty()
-  idProgrammingLanguage:  number;
-
- @IsNumber()
-  @IsNotEmpty()
-  idFrameworksOrDatabase:  number;
-
- @IsNumber()
-  @IsNotEmpty()
-  idTools:  number;
+  IdUserProfile: number;
 }

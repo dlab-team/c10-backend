@@ -1,53 +1,98 @@
-import { Injectable, ForbiddenException, Body, Req } from '@nestjs/common';
-import { JobProfileDto } from './dto';
-import { PrismaService } from './../prisma/prisma.service';
-import { DecodedTokenDto } from 'src/user/dto';
+import {
+  Injectable,
+  Req,
+  Body,
+  NotFoundException,
+} from "@nestjs/common";
+import { JobProfileDto } from "./dto";
+import { PrismaService } from "./../prisma/prisma.service";
+import { DecodedTokenDto } from "src/user/dto";
+
 
 @Injectable()
 export class JobProfileService {
   constructor(private prisma: PrismaService) {}
 
+
+  
   async getFrameworksProfile() {
-    const users = await this.prisma.frameworks_or_batabase.findMany();
-    return users.map(({ ...rest }) => rest);
+    const frameworks = await this.prisma.frameworks_or_batabase.findMany();
+    return frameworks.map(({ ...rest }) => rest);
   }
   async getLenaguajesProfile() {
-    const users = await this.prisma.programming_language.findMany();
-    return users.map(({ ...rest }) => rest);
+    const language = await this.prisma.programming_language.findMany();
+    return language.map(({ ...rest }) => rest);
   }
   async getToolsProfile() {
-    const users = await this.prisma.tools.findMany();
-    return users.map(({ ...rest }) => rest);
+    const tools = await this.prisma.tools.findMany();
+    return tools.map(({ ...rest }) => rest);
   }
 
-  async createJobProfile( @Req() req, @Body() dto: JobProfileDto) {
+  async createJobProfile(@Req() req, @Body() dto: JobProfileDto) {
     const user = req.user as DecodedTokenDto;
     try {
+      const userProfile = []
+      const levelArray =[]
+      const othersArray =[]
+      const languages = [];
+      const frameworks = [];
+      const tools = [];
 
-      const user_profile = await this.prisma.user_profile.findUnique({
-        where: { id_user: user.id },
-    });
-      const technologyExpertise = await this.prisma.technology_expertise.create(
-        {
-          data: {
-            level: dto.level,
-            others: dto.others,
-            id_programming_language: dto.idProgrammingLanguage,
-            id_frameworks_or_batabase: dto.idFrameworksOrDatabase,
-            id_tools:dto.idTools,
-            id_user_profile: user_profile.id,
-          },
-        },
-      );
-
-     
-      
-      return technologyExpertise;
-    } catch (error) {
-      if (error.code === 'P2002') {
-        throw new ForbiddenException('This language already exists');
+      for (let id_programming_language of dto.idProgrammingLanguage) {
+        for (let id_frameworks_or_batabase of dto.idFrameworksOrDatabase) {
+          for (let id_tools of dto.idTools) {
+            const technologyExpertise = await this.prisma.technology_expertise.create({
+                data: {
+                  level: dto.level,
+                  others: dto.others,
+                  id_programming_language: id_programming_language,
+                  id_frameworks_or_batabase: id_frameworks_or_batabase,
+                  id_tools: id_tools,
+                  id_user_profile: dto.IdUserProfile,
+                  
+                },
+                include: {
+                  programming_language: true,
+                  frameworks_or_batabase: true,
+                  tools: true,
+                  user_profile: true,
+                },
+                
+              });
+            userProfile.push(technologyExpertise.user_profile)
+            levelArray.push(technologyExpertise.level);
+            languages.push(technologyExpertise.programming_language);
+            frameworks.push(technologyExpertise.frameworks_or_batabase);
+            tools.push(technologyExpertise.tools);
+            othersArray.push(technologyExpertise.others)
+          }
+        }
       }
-      throw error;
+
+
+
+
+      return [
+        {userProfile:userProfile[0]},
+        {level:levelArray[0]},
+        { languages: languages },
+        { frameworks: frameworks },
+        { tools: tools },
+        {others: othersArray[0]}
+      ];
+    } catch (error) {
+      if (error.code === "P2025") {
+        console.log(
+          `usuario con id: ${user.id} error : ${error.meta.cause} : Error : ${error.code}`
+        );
+        throw new NotFoundException("Perfil de usuario no encontrado");
+      } else if (error.code === "P2003") {
+        console.log(
+          `Error : ${error.code} : Foreign key constraint failed :  ${error.meta.field_name}}`
+        );
+        throw new NotFoundException(`Value not found : Database Error`);
+      }
+      throw new Error(error);
     }
   }
 }
