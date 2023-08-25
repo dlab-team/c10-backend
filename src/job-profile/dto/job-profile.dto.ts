@@ -1,4 +1,10 @@
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsNotEmpty,
+  IsArray,
+  IsOptional,
+} from 'class-validator';
 
 export class JobProfileDto {
   @IsNumber()
@@ -9,19 +15,19 @@ export class JobProfileDto {
   @IsString()
   others: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  idProgrammingLanguage: number;
+  @IsArray()
+  @IsOptional()
+  idProgrammingLanguage:  Array<number>;
 
-  @IsNotEmpty()
-  @IsNumber()
-  idFrameworksOrDatabase: number;
+  @IsArray()
+  @IsOptional()
+  idFrameworksOrDatabase:  Array<number>;
 
-  @IsNotEmpty()
+  @IsArray()
+  @IsOptional()
+  idTools:  Array<number>;
+
   @IsNumber()
-  idTools: number;
-  
   @IsNotEmpty()
-  @IsNumber()
-  idUserProfile: number;
+  IdUserProfile: number;
 }
