@@ -1,4 +1,4 @@
-import { Controller, Get, Post,Body } from '@nestjs/common';
+import { Controller, Get, Post, Body,  Req } from '@nestjs/common';
 import { JobProfileService } from './job-profile.service';
 import { JobProfileDto } from './dto';
 
@@ -20,7 +20,7 @@ export class JobProfileController {
   }
 
   @Post('profile')
-  postJobProfile(@Body() dto: JobProfileDto) {
-    return this.jobProfileService.createJobProfile(dto);
+  postJobProfile(@Req() req, @Body() dto: JobProfileDto) {
+    return this.jobProfileService.createJobProfile(req,dto);
   }
 }
