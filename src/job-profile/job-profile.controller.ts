@@ -21,6 +21,6 @@ export class JobProfileController {
 
   @Post('profile')
   postJobProfile(@Body() dto: JobProfileDto) {
-    return this.jobProfileService.createJobProfile(dto);
+    return this.jobProfileService.createJobProfile(req, dto);
   }
 }
