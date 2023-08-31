@@ -29,5 +29,7 @@ export class JobProfileDto {
 
   @IsNumber()
   @IsNotEmpty()
-  IdUserProfile: number;
+  idUserProfile: number;
+
+ 
 }

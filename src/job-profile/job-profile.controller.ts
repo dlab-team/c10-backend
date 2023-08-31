@@ -19,6 +19,16 @@ export class JobProfileController {
     return this.jobProfileService.getToolsProfile();
   }
 
+  @Get('status')
+  getJobStatus() {
+    return this.jobProfileService.getJobStatus();
+  }
+
+  @Get('position')
+  getJobPosition() {
+    return this.jobProfileService.getJobPosition();
+  }
+
   @Post('profile')
   postJobProfile(@Req() req, @Body() dto: JobProfileDto) {
     return this.jobProfileService.createJobProfile(req,dto);
