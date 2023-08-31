@@ -20,6 +20,15 @@ export class JobProfileService {
     const tools = await this.prisma.tools.findMany();
     return tools.map(({ ...rest }) => rest);
   }
+  async getJobStatus() {
+    const jobStatus = await this.prisma.current_job_status.findMany();
+    return jobStatus.map(({ ...rest }) => rest);
+  }
+
+  async getJobPosition() {
+    const jobPosition = await this.prisma.target_position.findMany();
+    return jobPosition.map(({ ...rest }) => rest);
+  }
 
   async createJobProfile(@Req() req, @Body() dto: JobProfileDto) {
     const user = req.user as DecodedTokenDto;
