@@ -228,3 +228,10 @@ model years_experience {
   years        String         @db.VarChar(40)
   user_profile user_profile[]
 }
+
+model PasswordReset {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String   @unique
+  createdAt DateTime @default(now())
+}
