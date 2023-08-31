@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Controller, Post, Body, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto";
@@ -19,23 +18,11 @@ export class AuthController {
   }
 
   @Post("signup")
-=======
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
-
-@Controller('auth')
-export class AuthController {
-  constructor(private authService: AuthService) {}
-
-  @Post('signup')
->>>>>>> fc3b072bc458183c5138d8b751ffe4ef6c704a5e
   signup(@Body() dto: AuthDto) {
     return this.authService.signup(dto);
   }
 
   @HttpCode(HttpStatus.OK)
-<<<<<<< HEAD
   @Post("signin")
   signin(@Body() dto: AuthDto) {
     return this.authService.signin(dto);
@@ -76,10 +63,4 @@ export class AuthController {
     await this.authService.resetPassword(body.token, body.newPassword);
     return { message: "Reseteo de clave exitoso" };
   }
-=======
-  @Post('signin')
-  signin(@Body() dto: AuthDto) {
-    return this.authService.signin(dto);
-  }
->>>>>>> fc3b072bc458183c5138d8b751ffe4ef6c704a5e
 }
