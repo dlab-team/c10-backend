@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   ForbiddenException,
   Injectable,
@@ -26,6 +27,23 @@ export class AuthService {
       },
     });
   }
+=======
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { AuthDto } from './dto';
+import { JwtService } from '@nestjs/jwt';
+import * as argon from 'argon2';
+import { ConfigService } from '@nestjs/config/dist';
+import { Prisma, user } from '@prisma/client';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private prisma: PrismaService,
+    private jwt: JwtService,
+    private config: ConfigService,
+  ) {}
+>>>>>>> fc3b072bc458183c5138d8b751ffe4ef6c704a5e
 
   async signup(dto: AuthDto) {
     const hash = await argon.hash(dto.password);
@@ -48,8 +66,13 @@ export class AuthService {
 
       return this.signToken(createdUser.id, createdUser.email);
     } catch (error) {
+<<<<<<< HEAD
       if (error.code === "P2002") {
         throw new ForbiddenException("Duplicate Credentials");
+=======
+      if (error.code === 'P2002') {
+        throw new ForbiddenException('Duplicate Credentials');
+>>>>>>> fc3b072bc458183c5138d8b751ffe4ef6c704a5e
       }
       throw error;
     }
@@ -61,6 +84,7 @@ export class AuthService {
       where: {
         email: dto.email,
       },
+<<<<<<< HEAD
     });
     //if user does not exist throw exception
     if (!user) throw new ForbiddenException("Incorrect Information");
@@ -70,20 +94,45 @@ export class AuthService {
     if (!pwMatches) throw new ForbiddenException("Incorrect Information");
     //send back the user
     return this.signToken(user.id, user.email);
+=======
+      
+    });
+    //if user does not exist throw exception
+    if (!user) throw new ForbiddenException('Incorrect Information');
+    //compare the psw
+    const pwMatches = await argon.verify(user.password, dto.password);
+    //if psw is incorrect throw exception
+    if (!pwMatches) throw new ForbiddenException('Incorrect Information');
+    //send back the user
+    return this.signToken(user.id, user.email);
+
+    
+>>>>>>> fc3b072bc458183c5138d8b751ffe4ef6c704a5e
   }
 
   async signToken(
     userId: number,
+<<<<<<< HEAD
     email: string
+=======
+    email: string,
+>>>>>>> fc3b072bc458183c5138d8b751ffe4ef6c704a5e
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       email,
     };
+<<<<<<< HEAD
     const secret = this.config.get("JWT_SECRET");
 
     const token = await this.jwt.signAsync(payload, {
       expiresIn: "30min",
+=======
+    const secret = this.config.get('JWT_SECRET');
+
+    const token = await this.jwt.signAsync(payload, {
+      expiresIn: '30min',
+>>>>>>> fc3b072bc458183c5138d8b751ffe4ef6c704a5e
       secret: secret,
     });
 
@@ -91,6 +140,7 @@ export class AuthService {
       access_token: token,
     };
   }
+<<<<<<< HEAD
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
     const passwordReset = await this.prisma.passwordReset.findUnique({
@@ -174,4 +224,6 @@ export class AuthService {
       }
     });
   }
+=======
+>>>>>>> fc3b072bc458183c5138d8b751ffe4ef6c704a5e
 }
