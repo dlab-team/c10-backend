@@ -190,8 +190,8 @@ model user_profile {
   url_portfolio               String?                   @db.VarChar
   preferred_project           String?
   work_expectation            String?
+  id_current_job_status       Int
   id_user                     Int                       @unique(map: "user_profile_uq")
-  id_current_job_status       Int?
   id_years_experience         Int?
   id_better_current_situation Int?
   education_received          education_received[]
@@ -203,8 +203,8 @@ model user_profile {
   tt_framework_base           tt_framework_base[]
   tt_pro_language             tt_pro_language[]
   better_current_situation    better_current_situation? @relation(fields: [id_better_current_situation], references: [id], map: "better_current_situation_fk")
+  current_job_status          current_job_status       @relation(fields: [id_current_job_status], references: [id], map: "current_job_status_fk")
   user                        user                      @relation(fields: [id_user], references: [id], map: "user_fk")
-  current_job_status          current_job_status?        @relation(fields: [id_current_job_status], references: [id], map: "current_job_status_fk")
   years_experience            years_experience?         @relation(fields: [id_years_experience], references: [id], map: "years_experience_fk")
   user_to_position            user_to_position[]
 }
