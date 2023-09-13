@@ -5,9 +5,9 @@ import {
   IsOptional,
   IsNumber,
   ValidateNested,
-} from 'class-validator';
-import { UserRoleDto } from './userRole.dto';
-import { UserProfileDto } from './userProfile.dto';
+} from "class-validator";
+import { UserRoleDto } from "./userRole.dto";
+import { UserProfileDto } from "./userProfile.dto";
 
 export class AuthDto {
   @IsEmail()
