@@ -1,22 +1,61 @@
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, Length, IsOptional, IsInt } from 'class-validator';
 export class CreateUserProfileDto {
   @IsNotEmpty()
   @Length(9, 9, { message: 'Phone number must be a 9-digit number' })
   phone_number: string;
+
+  @IsNotEmpty()
+  @IsOptional()
   city: string;
+
+  @IsNotEmpty()
+  @IsOptional()
   country: string;
+
+  @IsNotEmpty()
+  @IsOptional()
   genre: string;
-  highest_edu_level: string | null;
-  current_edu_status: string | null;
-  english_level: string | null;
-  url_cv: string | null;
-  url_linkedin: string | null;
-  url_github: string | null;
-  url_portfolio: string | null;
-  preferred_project: string | null;
-  work_expectation: string | null;
-  id_current_job_status: number;
+
+  @IsOptional()
+  highest_edu_level: string;
+
+  @IsOptional()
+  current_edu_status: string;
+
+  @IsOptional()
+  english_level: string;
+
+  @IsOptional()
+  url_cv: string;
+
+  @IsOptional()
+  url_linkedin: string;
+
+  @IsOptional()
+  url_github: string;
+
+  @IsOptional()
+  url_portfolio: string;
+
+  @IsOptional()
+  preferred_project: string;
+
+  @IsOptional()
+  work_expectation: string;
+
+  @IsNotEmpty()
+  @IsInt()
   id_user: number;
-  id_years_experience: number | null;
-  id_better_current_situation: number | null;
+
+  @IsOptional()
+  @IsInt()
+  id_current_job_status: number;
+
+  @IsOptional()
+  @IsInt()
+  id_years_experience: number;
+
+  @IsOptional()
+  @IsInt()
+  id_better_current_situation: number;
 }

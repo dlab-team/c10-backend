@@ -5,10 +5,10 @@ import { JwtGuard } from '../../Auth/guard/jwt.guard';
 @UseGuards(JwtGuard)
 @Controller('profile/education')
 export class EducationController {
-    constructor(private education: EducationService){}
+  constructor(private education: EducationService) {}
 
-    @Post('addEducation')
-    addEducation(@Req() req ,@Body() data){
-        return this.education.addEducation(req, data);
-    }
+  @Post('addEducation')
+  addEducation(@Req() req, @Body() data) {
+    return this.education.addEducation(req, data);
+  }
 }
