@@ -2,7 +2,6 @@ import { Body, HttpStatus, Injectable, NotFoundException, Req } from '@nestjs/co
 import { PrismaService } from '../../prisma/prisma.service';
 import { DecodedTokenDto } from '../dto';
 import { JobSoughtDto } from './dto';
-import { profile } from 'console';
 
 @Injectable()
 export class JobSoughtService {
