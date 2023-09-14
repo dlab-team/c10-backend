@@ -17,6 +17,9 @@ export class JobProfileModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(DecodedTokenMiddleware)
-      .forRoutes({ path: "/job/profile/", method: RequestMethod.POST });
+      .forRoutes(
+        { path: "/job/profile/", method: RequestMethod.POST },
+        { path: "/job/profile/:id", method: RequestMethod.GET }
+      );
   }
 }
