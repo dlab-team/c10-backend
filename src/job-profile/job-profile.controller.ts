@@ -40,7 +40,7 @@ export class JobProfileController {
   }
 
   @Get('profile/:id')
-  async deleteJobById(@Param('id', ParseIntPipe) id: number) {
+  async getJobById(@Param('id', ParseIntPipe) id: number) {
     await this.jobProfileService.getJobProfileById(id);
     
   }
