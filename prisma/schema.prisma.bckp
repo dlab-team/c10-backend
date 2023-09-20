@@ -63,7 +63,7 @@ model frameworks_or_batabase {
   id                   Int                    @id(map: "frameworks_or_batabase_pk") @default(autoincrement())
   technology_name      String                 @db.VarChar(28)
   technology_expertise technology_expertise[]
-  tt_framework_base    tt_framework_base[]
+  tt_framework_base    tt_framework_base?
 }
 
 model profile_active_visa {
@@ -94,7 +94,7 @@ model programming_language {
   id                   Int                    @id(map: "programming_language_pk") @default(autoincrement())
   language             String                 @db.VarChar(28)
   technology_expertise technology_expertise[]
-  tt_pro_language      tt_pro_language[]
+  tt_pro_language      tt_pro_language?
 }
 
 model soft_skills {
@@ -125,20 +125,20 @@ model technology_expertise {
   id                        Int                     @id(map: "technology_expertise_pk") @default(autoincrement())
   level                     Int
   others                    String?
-  id_programming_language   Int
-  id_frameworks_or_batabase Int
-  id_tools                  Int
+  id_programming_language   Int?
+  id_frameworks_or_batabase Int?
+  id_tools                  Int?
   id_user_profile           Int
-  frameworks_or_batabase    frameworks_or_batabase @relation(fields: [id_frameworks_or_batabase], references: [id], map: "frameworks_or_batabase_fk")
-  programming_language      programming_language   @relation(fields: [id_programming_language], references: [id], map: "programming_language_fk")
-  tools                     tools                 @relation(fields: [id_tools], references: [id], map: "tools_fk")
+  frameworks_or_batabase    frameworks_or_batabase? @relation(fields: [id_frameworks_or_batabase], references: [id], map: "frameworks_or_batabase_fk")
+  programming_language      programming_language?   @relation(fields: [id_programming_language], references: [id], map: "programming_language_fk")
+  tools                     tools?                  @relation(fields: [id_tools], references: [id], map: "tools_fk")
   user_profile              user_profile            @relation(fields: [id_user_profile], references: [id], map: "user_profile_fk")
 }
 
 model tools {
   id                   Int                    @id(map: "tools_pk") @default(autoincrement())
   tool                 String                 @db.VarChar(28)
-  technical_test_tools technical_test_tools[]
+  technical_test_tools technical_test_tools?
   technology_expertise technology_expertise[]
 }
 
@@ -190,8 +190,8 @@ model user_profile {
   url_portfolio               String?                   @db.VarChar
   preferred_project           String?
   work_expectation            String?
+  id_current_job_status       Int
   id_user                     Int                       @unique(map: "user_profile_uq")
-  id_current_job_status       Int?
   id_years_experience         Int?
   id_better_current_situation Int?
   education_received          education_received[]
@@ -203,8 +203,8 @@ model user_profile {
   tt_framework_base           tt_framework_base[]
   tt_pro_language             tt_pro_language[]
   better_current_situation    better_current_situation? @relation(fields: [id_better_current_situation], references: [id], map: "better_current_situation_fk")
+  current_job_status          current_job_status       @relation(fields: [id_current_job_status], references: [id], map: "current_job_status_fk")
   user                        user                      @relation(fields: [id_user], references: [id], map: "user_fk")
-  current_job_status          current_job_status?        @relation(fields: [id_current_job_status], references: [id], map: "current_job_status_fk")
   years_experience            years_experience?         @relation(fields: [id_years_experience], references: [id], map: "years_experience_fk")
   user_to_position            user_to_position[]
 }
@@ -227,11 +227,4 @@ model years_experience {
   id           Int            @id(map: "years_experience_pk") @default(autoincrement())
   years        String         @db.VarChar(40)
   user_profile user_profile[]
-}
-
-model PasswordReset {
-  id        Int      @id @default(autoincrement())
-  email     String
-  token     String   @unique
-  createdAt DateTime @default(now())
 }

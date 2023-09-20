@@ -3,36 +3,60 @@ import { JobProfileDto } from "./dto";
 import { PrismaService } from "./../prisma/prisma.service";
 import { DecodedTokenDto } from "src/user/dto";
 
-
 @Injectable()
 export class JobProfileService {
   constructor(private prisma: PrismaService) {}
 
+  //Funcion para leer Frameworks almacenados en la base datos
   async getFrameworksProfile() {
     const frameworks = await this.prisma.frameworks_or_batabase.findMany();
     return frameworks.map(({ ...rest }) => rest);
   }
+
+  //Funcion para leer Lenguajes almacenados en la base datos
   async getLenaguajesProfile() {
     const language = await this.prisma.programming_language.findMany();
     return language.map(({ ...rest }) => rest);
   }
+
+  //Funcion para leer Herramientas almacenados en la base datos
   async getToolsProfile() {
     const tools = await this.prisma.tools.findMany();
     return tools.map(({ ...rest }) => rest);
   }
+
+  //Funcion para leer Disponibilidad almacenados en la base datos
   async getJobStatus() {
     const jobStatus = await this.prisma.current_job_status.findMany();
     return jobStatus.map(({ ...rest }) => rest);
   }
 
+  //Funcion para leer Posision educativa almacenados en la base datos
   async getJobPosition() {
     const jobPosition = await this.prisma.target_position.findMany();
     return jobPosition.map(({ ...rest }) => rest);
   }
 
+  async getAddProfile() {
+    const addProfile = await this.prisma.technology_expertise.findMany();
+    return addProfile.map(({ ...rest }) => rest);
+  }
+
+  async getJobProfileById(id: number) {
+    const profileJobId = await this.prisma.technology_expertise.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return profileJobId;
+  }
+
+  //Funcion para crear Perfil laboral datos recibidos del lado del cliente
   async createJobProfile(@Req() req, @Body() dto: JobProfileDto) {
     const user = req.user as DecodedTokenDto;
     try {
+      let idTecnology = 1;
       const userProfile = [];
       const levelArray = [];
       const othersArray = [];
@@ -60,6 +84,7 @@ export class JobProfileService {
                   user_profile: true,
                 },
               });
+            idTecnology = technologyExpertise.id;
             userProfile.push(technologyExpertise.user_profile);
             levelArray.push(technologyExpertise.level);
             languages.push(technologyExpertise.programming_language);
@@ -71,6 +96,7 @@ export class JobProfileService {
       }
 
       return [
+        { id: idTecnology },
         { userProfile: userProfile[0] },
         { level: levelArray[0] },
         { languages: languages },

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body,  Req } from '@nestjs/common';
+import { Controller, Get, Post, Body,  Req, Delete, Param, ParseIntPipe } from '@nestjs/common';
 import { JobProfileService } from './job-profile.service';
 import { JobProfileDto } from './dto';
 
@@ -29,8 +29,20 @@ export class JobProfileController {
     return this.jobProfileService.getJobPosition();
   }
 
+  @Get('add-profile')
+  getAddProfile() {
+    return this.jobProfileService.getAddProfile();
+  }
+
   @Post('profile')
   postJobProfile(@Req() req, @Body() dto: JobProfileDto) {
     return this.jobProfileService.createJobProfile(req,dto);
   }
+
+  @Get('profile/:id')
+  async getJobById(@Param('id', ParseIntPipe) id: number) {
+    await this.jobProfileService.getJobProfileById(id);
+    
+  }
+
 }

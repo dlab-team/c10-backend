@@ -1,4 +1,5 @@
 import {
+  Req,
   Controller,
   Get,
   Post,
@@ -16,8 +17,8 @@ export class UserProfileController {
   constructor(private readonly userProfileService: UserProfileService) {}
 
   @Post()
-  create(@Body() createUserProfileDto: CreateUserProfileDto) {
-    return this.userProfileService.create(createUserProfileDto);
+  create(@Req() req, @Body() createUserProfileDto: CreateUserProfileDto) {
+    return this.userProfileService.create(req, createUserProfileDto);
   }
 
   @Get()

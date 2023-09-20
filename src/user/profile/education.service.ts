@@ -11,6 +11,7 @@ export class EducationService {
   async addEducation(req: Request, data: EducationDto) {
     const user = req.user as DecodedTokenDto;
 
+
     try {
       const profile = await this.prisma.user_profile.update({
         where: {
@@ -19,8 +20,8 @@ export class EducationService {
         data: {
           highest_edu_level: data.highest_edu_level,
           english_level: data.english_level,
-          current_edu_status: data.current_edu_status
-        }
+          current_edu_status: data.current_edu_status,
+        },
       });
 
       await this.prisma.education_received.createMany({
